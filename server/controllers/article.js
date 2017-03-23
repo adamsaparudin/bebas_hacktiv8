@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 let User = require('../models/user')
 let Article = require('../models/article')
 
@@ -6,7 +7,12 @@ module.exports = {
     console.log("test");
   },
   create: (req, res, next) => {
-    Article.create(req.body)
+    let metaUser = jwt.verify(req.body.token, 'This is secret token auth')
+    Article.create({
+      title: req.body.title,
+      content: req.body.content,
+      author: metaUser._id
+    })
     .then( (article) => {
       User.findByIdAndUpdate(article.author, {$push: {articles: article._id}}, function(err, model){
         if(err)
