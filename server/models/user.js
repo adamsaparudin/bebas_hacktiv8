@@ -8,7 +8,10 @@ let userSchema = new Schema({
   password: {type: String, required: true},
   email: {type: String},
   salt: {type: String},
-  name: {type: String}
+  name: {type: String},
+  articles: [{ type: Schema.Types.ObjectId, ref: 'Article' }]
+}, {
+  timestamps: true
 })
 
 module.exports = mongoose.model('User', userSchema)
