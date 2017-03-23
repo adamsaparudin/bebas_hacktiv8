@@ -6,6 +6,7 @@ let User = require('../models/user')
 module.exports = {
 
   register: (req, res, next) => {
+    console.log(req.body);
     let salt = crypto.randomBytes(128).toString('base64');
     let hashPass = crypto.createHmac('sha256', req.body.password).update(salt).digest('hex')
     User.create({
@@ -34,8 +35,12 @@ module.exports = {
       }
       else if (user.password == hashPass) {
         user.password = null
+        let message = "success login"
         let token = jwt.sign(user, 'This is secret token auth')
-        res.send(token)
+        res.json({
+          token: token,
+          message: message
+        })
       }
       else {
         res.send("Something wrong")
